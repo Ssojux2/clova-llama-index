@@ -45,15 +45,20 @@ class ClovaLLM(LLM):
     ):
         """
         ClovaLLM 어댑터를 초기화합니다.
-        (이하 __init__ 메서드 설명 생략 - 이전과 동일)
+        (이하 __init__ 메서드 설명 생략)
         """
-        self._client = client
-        self._api_kwargs = kwargs # 기본 API 파라미터 저장
         super().__init__(
             model=model,
             context_window=context_window,
             num_output=num_output,
+            # 다른 필요한 기본 클래스 인자가 있다면 여기에 추가
+            # 예를 들어, callback_manager 등은 LLM 기본 클래스가 받을 수 있음
+            # callback_manager=kwargs.get('callback_manager'), # 예시
         )
+
+        # !!! 중요: PrivateAttr 속성은 super() 호출 후에 할당 !!!
+        self._client = client
+        self._api_kwargs = kwargs # 나머지 kwargs는 API 호출용으로 저장
 
     @classmethod
     def class_name(cls) -> str:
