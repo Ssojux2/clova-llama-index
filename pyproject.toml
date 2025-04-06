@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "clova-llama-index" # 프로젝트 이름 변경
+version = "0.1.0" # 초기 버전
+authors = [
+  # 필요시 이름과 이메일 추가
+  { name="Junseop So / Gemini 2.5 Pro", email="ssojux2@gmail.com" },
+]
+description = "네이버 클라우드 HyperCLOVA X 와 LlamaIndex 연동을 위한 클래스 모음"
+readme = "README.md"
+requires-python = ">=3.8" # 최소 Python 버전 명시 (LlamaIndex 및 asyncio 고려)
+license = { file="LICENSE" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License", # 또는 다른 라이선스 선택
+    "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Development Status :: 3 - Alpha", # 개발 초기 단계 명시
+]
+
+# 코드 실행에 필요한 외부 라이브러리 목록
+dependencies = [
+    "requests>=2.20.0",       # client.py에서 API 호출에 사용
+    "llama-index-core>=0.10.0", # BaseEmbedding, LLM, types 등에 필요. 버전은 필요에 따라 조정.
+                                # llama-index -> llama-index-core 로 변경 (최신 트렌드 반영)
+    "pydantic>=1.10,<3.0",      # llama-index-core에서 요구하며 PrivateAttr 등에 사용 (v1/v2 호환성 고려)
+]
+
+[project.urls]
+Homepage = "https://github.com/Ssojux2/clova-llama-index"
+Issues = "https://github.com/Ssojux2/clova-llama-index/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]  # setuptools에게 'src' 디렉토리에서 패키지를 찾도록 지시
