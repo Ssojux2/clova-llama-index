@@ -15,7 +15,7 @@
 pip를 사용하여 GitHub에서 직접 이 패키지를 설치할 수 있습니다:
 
 ```bash
-pip install git+[https://github.com/your-username/clova-llama-index.git](https://www.google.com/search?q=https://github.com/your-username/clova-llama-index.git)
+pip install git+[https://github.com/Ssojux2/clova-llama-index.git](https://www.google.com/search?q=https://github.com/Ssojux2/clova-llama-index.git)
 ```
 
 
