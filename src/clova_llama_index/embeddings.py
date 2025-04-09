@@ -1,6 +1,7 @@
 import asyncio
 from typing import List, Any
 from pydantic import PrivateAttr
+import time
 
 from llama_index.core.embeddings import BaseEmbedding
 
@@ -24,6 +25,7 @@ class ClovaIndexEmbeddings(BaseEmbedding):
         clova_client: ClovaClient,
         model: str = "embedding_v2",  # 추적/메타데이터용 모델 이름
         embed_batch_size: int = DEFAULT_EMBED_BATCH_SIZE,  # 기본값 1로 설정
+        embed_time: float = 1.0,
         **kwargs: Any,
     ) -> None:
         """
@@ -42,6 +44,7 @@ class ClovaIndexEmbeddings(BaseEmbedding):
         super().__init__(embed_batch_size=embed_batch_size, model_name=model, **kwargs)  # model_name 전달
         self._client = clova_client
         self._model = model  # 로컬에도 저장 (BaseEmbedding에도 저장됨)
+        self.embed_time = embed_time
 
     @classmethod
     def class_name(cls) -> str:
@@ -52,6 +55,7 @@ class ClovaIndexEmbeddings(BaseEmbedding):
     async def _aget_query_embedding(self, query: str) -> List[float]:
         """비동기적으로 쿼리 임베딩을 가져옵니다."""
         try:
+            time.sleep(self.embed_time)
             res = await asyncio.to_thread(
                 self._client.embeddings.create, input=query, model=self._model
             )
@@ -71,6 +75,7 @@ class ClovaIndexEmbeddings(BaseEmbedding):
     def _get_query_embedding(self, query: str) -> List[float]:
         """쿼리 임베딩을 가져옵니다."""
         try:
+            time.sleep(self.embed_time)
             res = self._client.embeddings.create(input=query, model=self._model)
             data = res.get("data", [])
             if not data or not data[0].get("embedding"):
