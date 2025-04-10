@@ -1,5 +1,5 @@
 import asyncio
-from typing import List, Any
+from typing import List, Any, Optional  # Optional 추가
 from pydantic import PrivateAttr
 import time
 
@@ -25,6 +25,7 @@ class ClovaIndexEmbeddings(BaseEmbedding):
         clova_client: ClovaClient,
         model: str = "embedding_v2",  # 추적/메타데이터용 모델 이름
         embed_batch_size: int = DEFAULT_EMBED_BATCH_SIZE,  # 기본값 1로 설정
+        request_delay: Optional[float] = None,  # ClovaEmbeddings의 request_delay를 조정하기 위한 파라미터
         **kwargs: Any,
     ) -> None:
         """
@@ -34,6 +35,7 @@ class ClovaIndexEmbeddings(BaseEmbedding):
             clova_client: 초기화된 ClovaClient 인스턴스.
             model: 임베딩과 연관될 모델 이름.
             embed_batch_size: 임베딩 요청 배치 크기. 현재 API는 1이어야 합니다.
+            request_delay: 각 임베딩 요청 전 대기 시간(초). None인 경우 ClovaEmbeddings의 기본값 사용.
             **kwargs: BaseEmbedding 부모 클래스로 전달되는 추가 인수.
         """
         if embed_batch_size != DEFAULT_EMBED_BATCH_SIZE:
@@ -43,6 +45,10 @@ class ClovaIndexEmbeddings(BaseEmbedding):
         super().__init__(embed_batch_size=embed_batch_size, model_name=model, **kwargs)  # model_name 전달
         self._client = clova_client
         self._model = model  # 로컬에도 저장 (BaseEmbedding에도 저장됨)
+        
+        # request_delay가 지정된 경우, ClovaEmbeddings 인스턴스의 request_delay를 설정
+        if request_delay is not None:
+            self._client.embeddings.request_delay = request_delay
 
     @classmethod
     def class_name(cls) -> str:
